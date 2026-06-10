@@ -1,64 +1,46 @@
-import Image from "next/image";
+import { cookies } from "next/headers";
+import { getUserFromSessionCookie } from "@/lib/auth";
+import AuthForms from "@/app/components/AuthForms";
+import HandleSearch from "@/app/components/HandleSearch";
 
-export default function Home() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session")?.value;
+  const user = await getUserFromSessionCookie(session);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-full bg-zinc-50 px-6 py-10 text-zinc-900 dark:bg-black dark:text-white">
+      <main className="mx-auto flex max-w-6xl flex-col gap-10 lg:grid lg:grid-cols-[1.2fr_0.8fr] lg:items-start lg:gap-12">
+        <section className="rounded-[2rem] bg-white p-10 shadow-xl shadow-zinc-200/40 dark:bg-zinc-950 dark:shadow-none">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-400">Linker.me</p>
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-zinc-950 dark:text-white sm:text-5xl">
+            Personal bookmarks with a public profile and private dashboard.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-6 max-w-2xl text-base leading-8 text-zinc-600 dark:text-zinc-300">
+            Save links privately, publish the ones you want, and share your profile at a unique @{`handle`}. Everything is stored backend-side and only you can manage your bookmarks.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+          <div className="mt-8 space-y-6 rounded-3xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-400">Browse a profile</p>
+            <HandleSearch />
+          </div>
+
+          {user ? (
+            <div className="mt-10 rounded-3xl border border-zinc-200 bg-white p-6 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white">
+              <p className="text-sm uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-400">Signed in</p>
+              <h2 className="mt-2 text-2xl font-semibold">Welcome back, @{user.handle}</h2>
+              <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">Your dashboard is ready. Continue managing bookmarks from the dashboard.</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a href="/dashboard" className="rounded-2xl bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800">Go to dashboard</a>
+                <a href={`/${user.handle}`} className="rounded-2xl border border-zinc-200 px-5 py-3 text-sm text-zinc-900 transition hover:border-zinc-300 dark:border-zinc-700 dark:text-white">View public profile</a>
+              </div>
+            </div>
+          ) : null}
+        </section>
+
+        <section>
+          <AuthForms />
+        </section>
       </main>
     </div>
   );

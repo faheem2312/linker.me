@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local directories
+/data/
+/.claude/
+/.cursor/
+/.entire/
+/.gemini/
