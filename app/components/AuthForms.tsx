@@ -11,7 +11,7 @@ const initialState = {
 
 export default function AuthForms() {
   const router = useRouter();
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [isSignUp, setIsSignUp] = useState(false);
   const [form, setForm] = useState(initialState);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -25,14 +25,18 @@ export default function AuthForms() {
     setSubmitting(true);
     setError(null);
 
-    const url = `/api/auth/${mode}`;
+    const url = isSignUp ? "/api/auth/signup" : "/api/auth/login";
     const payload: Record<string, unknown> = {
       email: form.email,
       password: form.password,
     };
 
-    if (mode === "signup") {
-      payload.handle = form.handle;
+    if (isSignUp) {
+      let handle = form.handle.trim();
+      if (handle.startsWith("@")) {
+        handle = handle.slice(1);
+      }
+      payload.handle = handle;
     }
 
     const response = await fetch(url, {
@@ -54,76 +58,80 @@ export default function AuthForms() {
   };
 
   return (
-    <div className="rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm shadow-zinc-200/50 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none">
+    <div className="rounded-3xl border border-muted-tan bg-latte p-8 shadow-sm">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-400">Personal bookmarks</p>
-          <h2 className="mt-3 text-2xl font-semibold text-zinc-950 dark:text-white">Get started with login or sign up</h2>
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-walnut">Personal bookmarks</p>
+          <h2 className="mt-3 text-2xl font-semibold text-espresso">
+            {isSignUp ? "Create your account" : "Welcome back"}
+          </h2>
         </div>
         <button
           type="button"
-          onClick={() => setMode(mode === "login" ? "signup" : "login")}
-          className="rounded-full border border-zinc-200 px-4 py-2 text-sm text-zinc-700 transition hover:border-zinc-300 dark:border-zinc-700 dark:text-zinc-200"
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="rounded-full border border-muted-tan bg-almond px-4 py-2 text-sm text-espresso transition hover:border-walnut hover:text-caramel"
         >
-          {mode === "login" ? "Create an account" : "Have an account?"}
+          {isSignUp ? "Sign in instead" : "Create an account"}
         </button>
       </div>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+        <label className="block text-sm font-medium text-espresso">
           Email
           <input
             name="email"
             type="email"
             value={form.email}
             onChange={handleChange}
-            className="mt-2 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black dark:border-zinc-700 dark:text-white dark:focus:border-white"
+            className="mt-2 w-full rounded-2xl border border-muted-tan bg-white px-4 py-3 text-sm text-espresso outline-none transition focus:border-caramel"
             required
           />
         </label>
 
-        {mode === "signup" ? (
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Choose a handle
+        {isSignUp ? (
+          <label className="block text-sm font-medium text-espresso">
+            Choose a Handle
             <input
               name="handle"
               type="text"
               value={form.handle}
               onChange={handleChange}
-              placeholder="your-handle"
-              className="mt-2 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black dark:border-zinc-700 dark:text-white dark:focus:border-white"
+              placeholder="@username"
+              className="mt-2 w-full rounded-2xl border border-muted-tan bg-white px-4 py-3 text-sm text-espresso outline-none transition focus:border-caramel placeholder:text-walnut/50"
               required
             />
-            <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">Lowercase letters, numbers, dashes and underscores only.</span>
+            <span className="mt-1 block text-xs text-walnut">Lowercase letters, numbers, dashes and underscores only.</span>
           </label>
         ) : null}
 
-        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+        <label className="block text-sm font-medium text-espresso">
           Password
           <input
             name="password"
             type="password"
             value={form.password}
             onChange={handleChange}
-            className="mt-2 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black dark:border-zinc-700 dark:text-white dark:focus:border-white"
+            className="mt-2 w-full rounded-2xl border border-muted-tan bg-white px-4 py-3 text-sm text-espresso outline-none transition focus:border-caramel"
             minLength={8}
             required
           />
         </label>
 
-        {error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
+        {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex w-full items-center justify-center rounded-2xl bg-zinc-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-2xl bg-caramel hover:bg-caramel-hover text-white py-3.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {submitting ? "Working…" : mode === "login" ? "Log in" : "Sign up"}
+          {submitting ? "Working…" : isSignUp ? "Sign Up" : "Log In"}
         </button>
       </form>
 
-      <p className="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
-        Signing up creates a dashboard for your bookmarks. We also log a welcome email to the server so you can inspect it during local development.
+      <p className="mt-5 text-sm text-walnut">
+        {isSignUp
+          ? "Signing up creates a private dashboard for your bookmarks."
+          : "Sign in to access your private dashboard and manage your bookmarks."}
       </p>
     </div>
   );

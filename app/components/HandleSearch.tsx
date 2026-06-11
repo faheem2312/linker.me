@@ -25,9 +25,9 @@ export default function HandleSearch() {
         value={handle}
         onChange={(event) => setHandle(event.target.value)}
         placeholder="Enter a handle, e.g. alice"
-        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-black dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:border-white"
+        className="w-full rounded-2xl border border-muted-tan bg-white px-4 py-3 text-sm text-espresso outline-none transition focus:border-caramel placeholder:text-walnut/50"
       />
-      <button className="rounded-2xl bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800" type="submit">
+      <button className="rounded-2xl bg-caramel px-5 py-3 text-sm font-semibold text-white transition hover:bg-caramel-hover" type="submit">
         View profile
       </button>
     </form>

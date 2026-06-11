@@ -15,7 +15,7 @@ export default async function DashboardPage() {
 
   const bookmarks = await getBookmarksByUserId(user.id, session);
   return (
-    <div className="min-h-full bg-zinc-50 px-6 py-10 text-zinc-900 dark:bg-black dark:text-white">
+    <div className="min-h-full bg-almond px-6 py-10 text-espresso">
       <div className="mx-auto max-w-6xl">
         <DashboardApp user={{ handle: user.handle, email: user.email }} initialBookmarks={bookmarks} />
       </div>

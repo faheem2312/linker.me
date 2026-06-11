@@ -3,14 +3,21 @@ import { cookies } from "next/headers";
 import { getUserFromSessionCookie } from "@/lib/auth";
 import { createBookmark, getBookmarksByUserId } from "@/lib/db";
 
-function validateBookmark(payload: any) {
+interface BookmarkPayload {
+  title: string;
+  url: string;
+  isPublic: boolean;
+}
+
+function validateBookmark(payload: unknown): payload is BookmarkPayload {
+  const p = payload as BookmarkPayload;
   return (
-    payload &&
-    typeof payload.title === "string" &&
-    payload.title.trim().length > 0 &&
-    typeof payload.url === "string" &&
-    payload.url.trim().length > 0 &&
-    typeof payload.isPublic === "boolean"
+    !!p &&
+    typeof p.title === "string" &&
+    p.title.trim().length > 0 &&
+    typeof p.url === "string" &&
+    p.url.trim().length > 0 &&
+    typeof p.isPublic === "boolean"
   );
 }
 
