@@ -12,12 +12,14 @@ A premium, minimalist personal bookmarks application with public profiles and pr
    npm install
    ```
 3. **Configure Environment Variables**:
-   Create a `.env.local` file in the root directory and define the Supabase credentials:
+   Create a `.env.local` file in the root directory and define the required service credentials:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-   SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-   JWT_SECRET=your-secure-jwt-secret-string
+   NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-url.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_your_publishable_key
+   
+   # Brevo Email Service Configuration
+   BREVO_API_KEY=xkeysib-your-brevo-api-key
+   BREVO_SENDER_EMAIL=your-verified-sender-email@example.com
    ```
 4. **Start the Development Server**:
    ```bash
